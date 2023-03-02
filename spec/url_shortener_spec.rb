@@ -1,44 +1,45 @@
 require './app/url_shortener'
 
 RSpec.describe URLShortener do
-    before(:all) do
-        @db = Daybreak::DB.new './data/urls.db'
+  before do
+    @db = Daybreak::DB.new './data/urls.db'
+  end
+
+  after do
+    @db.close
+    File.delete('./data/urls.db')
+  end
+
+  describe '.shorten' do
+    it 'shortens the url' do
+      short_url = URLShortener.new.shorten('https://www.yahoo.com')
+
+      expect(short_url.size).to be < 'https://www.yahoo.com'.size
     end
 
-    describe '.shorten' do
-        it 'shortens the url' do
-            short_url = URLShortener.shorten('https://www.yahoo.com')
+    it 'writes shortened url the db' do
+      short_url = URLShortener.new.shorten('https://www.google.com')
+      @db.load
 
-            expect(short_url.size).to be < 'https://www.yahoo.com'.size
-        end
+      retrieved_url = @db[short_url]
 
-        it 'writes shortened url the db' do
-            short_url = URLShortener.shorten('https://www.google.com')
+      expect(retrieved_url).to eq 'https://www.google.com'
+    end
+  end
 
-            @db.load
-            retrieved_url = @db[short_url]
-            expect(retrieved_url).to eq 'https://www.google.com'
-        end
+  describe '.retrieve' do
+    it 'retrieves full-length url from the db' do
+      @db.set!('https://short_url.com', 'https://www.full_length_url.com')
+
+      long_url = URLShortener.new.retrieve('https://short_url.com')
+
+      expect(long_url).to eq 'https://www.full_length_url.com'
     end
 
-    describe '.retrieve' do
-        it 'retrieves full-length url from the db' do
-            @db['https://short_url.com'] = 'https://www.full_length_url.com'
-
-            long_url = URLShortener.retrieve('https://short_url.com')
-
-            expect(long_url).to eq 'https://www.full_length_url.com'
-        end
-
-        it 'raises a "not found" error when url is not in the db' do
-            expect do
-                URLShortener.retrieve('https://unknown_url.com')
-            end.to raise_error('URL not found: https://unknown_url.com')
-        end
+    it 'raises a "not found" error when url is not in the db' do
+      expect do
+        URLShortener.new.retrieve('https://unknown_url.com')
+      end.to raise_error('URL not found: https://unknown_url.com')
     end
-
-    after(:all) do
-        @db.close
-        File.delete('./data/urls.db')
-    end
+  end
 end
