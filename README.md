@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Demonstrate benefits of dependency injection
+Demonstrate benefits of dependency injection, doubles and spies
 
 ## Setup
 
@@ -10,7 +10,7 @@ Demonstrate benefits of dependency injection
 
 1. Install rbenv (Ruby version manager) using [rbenv-installer](https://github.com/rbenv/rbenv-installer) (follow link for instructions).
     - Run `rbenv init` and follow the instructions to configure your shell
-1. Install Ruby: `rbenv install 3.1.0`.
+1. Install Ruby: `rbenv install 3.2.0`.
 1. Install bundler: `gem install bundler`.
 1. Install dependencies for auto-running tests: `brew install ag entr`
 
@@ -53,21 +53,11 @@ irb
 
 You have inherited a `URLShortener`. Two public methods exist on the class:
 
-1. `URLShortener.shorten(long_url)`
+1. `URLShortener.new.shorten(long_url)`
     - Given a new full-length URL, it generates a shortened version of the URL and stores it in the DB
     - Given an existing full-length URL, it retrieves the shortened version of the URL from the DB
-2. `URLShortener.retrieve(short_url)`
+2. `URLShortener.new.retrieve(short_url)`
     - Given an existing shortened URL, retrieves the full-length URL from the DB
     - Given a non-existent shortened URL, raises a "not found" error
 
-The service needs to be extended in the following way:
-
-1. Use a better URL shortening algorithm
-2. Use a more scalable DB technology
-
-The team has not yet decided on either of the above implementations. However, in preparation for the above, we wish to:
-
-1. Verify the behaviour works as documented above
-2. Redesign `URLShortener` so that it can be extended
-
-_**Apply TDD to achieve the above two goals.**_
+The goal of this kata is to introduce doubles and spies using Dependency Inversion. This is an exercise in refactoring and isolating the method under test from its dependencies.
