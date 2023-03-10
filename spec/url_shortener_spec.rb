@@ -14,10 +14,10 @@ RSpec.describe URLShortener do
     it 'shortens the url' do
       short_url = URLShortener.new.shorten('https://www.yahoo.com')
 
-      expect(short_url.size).to be < 'https://www.yahoo.com'.size
+      expect(short_url).to eq('https://conn.io/5467')
     end
 
-    it 'writes shortened url the db' do
+    it 'writes shortened url to the db' do
       short_url = URLShortener.new.shorten('https://www.google.com')
       @db.load
 

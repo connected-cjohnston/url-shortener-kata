@@ -60,4 +60,6 @@ You have inherited a `URLShortener`. Two public methods exist on the class:
     - Given an existing shortened URL, retrieves the full-length URL from the DB
     - Given a non-existent shortened URL, raises a "not found" error
 
+There is a failing test that needs to be fix.
+
 The goal of this kata is to introduce doubles and spies using Dependency Inversion. This is an exercise in refactoring and isolating the method under test from its dependencies.
